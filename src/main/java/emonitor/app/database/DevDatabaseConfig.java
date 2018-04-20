@@ -13,6 +13,7 @@ import javax.sql.DataSource;
 import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.jndi.JndiObjectFactoryBean;
 import org.springframework.orm.jpa.JpaDialect;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -36,17 +37,8 @@ import static org.springframework.orm.jpa.vendor.Database.H2;
  */
 @Configuration
 @EnableTransactionManagement(mode = AdviceMode.ASPECTJ)
-public class DatabaseConfig {
-
-    @Bean
-    public JndiObjectFactoryBean dataSource() {
-        final JndiObjectFactoryBean jndiObjectFB = new JndiObjectFactoryBean();
-        jndiObjectFB.setJndiName("jdbc/chdDataSource");
-        jndiObjectFB.setProxyInterface(DataSource.class);
-        jndiObjectFB.setResourceRef(true);
-        jndiObjectFB.setLookupOnStartup(true);
-        return jndiObjectFB;
-    }
+@Profile("dev")
+public class DevDatabaseConfig {
 
     @Bean
     public JpaVendorAdapter jpaVendorAdapter() {
@@ -58,14 +50,9 @@ public class DatabaseConfig {
     }
 
     @Bean
-    public JpaDialect dialect() {
-        return new EclipseLinkJpaDialect();
-    }
-
-    @Bean
     public PersistenceUnitManager unitManager() {
         final DefaultPersistenceUnitManager unitManager = new DefaultPersistenceUnitManager();
-        unitManager.setPersistenceXmlLocation("classpath:META-INF/persistence.xml");
+        unitManager.setPersistenceXmlLocation("classpath:META-INF/dev-persistence.xml");
         return unitManager;
     }
 
@@ -76,12 +63,5 @@ public class DatabaseConfig {
         emfb.setJpaDialect(dialect);
         emfb.setPersistenceUnitName("h2-eclipselink");
         return emfb;
-    }
-
-    @Bean
-    public JpaTransactionManager transactionManager(final EntityManagerFactory factory) {
-        final JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(factory);
-        return transactionManager;
     }
 }

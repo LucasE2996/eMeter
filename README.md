@@ -28,5 +28,17 @@ Server:
 Hardware:
 - ESP8266
 
+Como utilizar:
+---
+Iniciar para produção:
+````
+java -jar -Dspring.profiles.active=prod app-0.0.1-SNAPSHOT.jar
+````
+
+Iniciar para desenvovimento ou teste:
+````
+java -jar -Dspring.profiles.active=dev app-0.0.1-SNAPSHOT.jar 
+````
+
 ---------------------------------------
 TCC College Project - All rights reserved
