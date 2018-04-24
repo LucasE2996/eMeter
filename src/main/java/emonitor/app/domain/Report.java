@@ -2,20 +2,20 @@ package emonitor.app.domain;
 
 import lombok.Getter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
-@Entity
+@Embeddable
 public class Report {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Getter private Integer id;
     @Getter private double dayAvarage;
     @Getter private double weekAverage;
     @Getter private double monthAverage;
 
+    public Report(double dayAvarage, double weekAverage, double monthAverage) {
+        this.dayAvarage = dayAvarage;
+        this.weekAverage = weekAverage;
+        this.monthAverage = monthAverage;
+    }
 
+    protected Report() {}
 }

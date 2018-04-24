@@ -9,13 +9,20 @@ import javax.persistence.*;
 public class Meter {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter private Integer id;
-    @OneToOne
+    @Getter @Setter private String name;
     @Getter private Watt watt;
-    @OneToOne
     @Getter private Report report;
     @ManyToOne(fetch = FetchType.LAZY)
-    @Getter @Setter private User user;
+    @Getter @Setter private Client client;
+
+    public Meter(String defaultName, Watt watt, Report report) {
+        this.name = defaultName;
+        this.watt = watt;
+        this.report = report;
+    }
+
+    protected Meter() {}
 
 }

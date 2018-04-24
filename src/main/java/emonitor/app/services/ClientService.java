@@ -1,27 +1,27 @@
 package emonitor.app.services;
 
-import emonitor.app.database.UserRepository;
-import emonitor.app.domain.User;
+import emonitor.app.database.ClientRepository;
+import emonitor.app.domain.Client;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
 
 @Service
-public class UserService {
+public class ClientService {
 
-    private final UserRepository repository;
+    private final ClientRepository repository;
 
-    public UserService(UserRepository repository) {
+    public ClientService(ClientRepository repository) {
         this.repository = repository;
     }
 
-    public User getUser(int id) {
+    public Client getUser(int id) {
         return repository.findById(id)
                 .orElseThrow(NoSuchElementException::new);
     }
 
-    public void save(User user) {
-        repository.save(user);
+    public void save(Client client) {
+        repository.save(client);
     }
 
     public void delete(int id) {

@@ -1,7 +1,7 @@
 package emonitor.app.restapi;
 
 import emonitor.app.services.RestError;
-import emonitor.app.services.UserService;
+import emonitor.app.services.ClientService;
 import emonitor.app.wrapper.UserWrapper;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,31 +13,30 @@ import java.net.URI;
 import java.util.NoSuchElementException;
 
 @RestController
-public class UserController {
+public class ClientController {
 
-    private final UserService userService;
+    private final ClientService clientService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public ClientController(ClientService clientService) {
+        this.clientService = clientService;
     }
 
-    @GetMapping(value = "/user/{id}", produces = "application/json")
+    @GetMapping(value = "/user/{id}/detail", produces = "application/json")
     public ResponseEntity<?> getUser(
             @PathVariable int id,
             UriComponentsBuilder ucb) {
         final URI location = ucb
-                .path("/user/")
+                .path("/client/")
                 .path(String.valueOf(id))
-                .build()
-                .toUri();
+                .path("detail").build().toUri();
         final HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(location);
         try {
-            UserWrapper wrapper = new UserWrapper(userService.getUser(id));
+            UserWrapper wrapper = new UserWrapper(clientService.getUser(id));
             return new ResponseEntity<>(wrapper, responseHeaders, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             e.printStackTrace();
-            RestError error = new RestError(4, "The user " + id + "could not be found");
+            RestError error = new RestError(4, "The client with ID: '" + id + "' could not be found");
             return new ResponseEntity<>(error, responseHeaders, HttpStatus.NOT_FOUND);
         }
     }
@@ -47,11 +46,11 @@ public class UserController {
             @RequestBody UserWrapper wrapper,
             UriComponentsBuilder ucb) {
         final URI location = ucb
-                .path("/user/new")
+                .path("/client/new")
                 .build().toUri();
         final HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(location);
-        userService.save(wrapper.getUser());
+        clientService.save(wrapper.getClient());
         return new ResponseEntity<>(wrapper, responseHeaders, HttpStatus.CREATED);
     }
 }

@@ -2,7 +2,7 @@ package emonitor.app.wrapper;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import emonitor.app.domain.User;
+import emonitor.app.domain.Client;
 import emonitor.app.serialization.UserDeserializer;
 import emonitor.app.serialization.UserSerializer;
 import lombok.Getter;
@@ -11,9 +11,9 @@ import lombok.Getter;
 @JsonDeserialize(using = UserDeserializer.class)
 public class UserWrapper {
 
-    @Getter private final User user;
+    @Getter private final Client client;
 
-    public UserWrapper(final User user) {
-        this.user = user;
+    public UserWrapper(final Client client) {
+        this.client = client;
     }
 }

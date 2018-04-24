@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
-import emonitor.app.domain.User;
+import emonitor.app.domain.Client;
 import emonitor.app.wrapper.UserWrapper;
 
 import java.io.IOException;
@@ -22,6 +22,6 @@ public class UserDeserializer extends JsonDeserializer<UserWrapper> {
         final String email = jsonNode.get("email").asText();
         final String password = jsonNode.get("password").asText();
 
-        return new UserWrapper(new User(name, lastName, email, password));
+        return new UserWrapper(new Client(name, lastName, email, password));
     }
 }
