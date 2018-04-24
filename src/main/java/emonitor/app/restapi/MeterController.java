@@ -45,10 +45,10 @@ public class MeterController {
         final Meter meter = new Meter("Meter", new Watt(0), new Report(0,0,0));
         final MeterWrapper wrapper = new MeterWrapper(meter);
         try {
-            service.save(wrapper.getMeter());
             final Client client = clientService.getUser(clientId);
             client.addMeter(wrapper.getMeter());
             wrapper.getMeter().setClient(client);
+            service.save(wrapper.getMeter());
             clientService.save(client);
             return new ResponseEntity<>(wrapper, responseHeaders, HttpStatus.CREATED);
         } catch (NoSuchElementException e) {
