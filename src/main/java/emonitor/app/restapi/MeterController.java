@@ -30,14 +30,14 @@ public class MeterController {
         this.clientService = clientService;
     }
 
-    @PostMapping(value = "/client/{clientId}/new-meter",
+    @PostMapping(value = "/user/{clientId}/new-meter",
             consumes = "application/json",
             produces = "application/json")
     public ResponseEntity<?> createMeter(
             @PathVariable int clientId,
             UriComponentsBuilder ucb) {
         URI location = ucb
-                .path("/client/")
+                .path("/user/")
                 .path(String.valueOf(clientId))
                 .path("new-meter").build().toUri();
         HttpHeaders responseHeaders = new HttpHeaders();
@@ -59,13 +59,13 @@ public class MeterController {
 
     }
 
-    @GetMapping(value = "/client/{clientId}/meters",
+    @GetMapping(value = "/user/{clientId}/meters",
             produces = "application/json")
     public ResponseEntity<?> getAllMeters(
             @PathVariable int clientId,
             UriComponentsBuilder ucb) {
         URI location = ucb
-                .path("/client/")
+                .path("/user/")
                 .path(String.valueOf(clientId))
                 .path("/meters").build().toUri();
         HttpHeaders responseHeaders = new HttpHeaders();

@@ -12,8 +12,7 @@ public class UserSerializer extends JsonSerializer<UserWrapper> {
     @Override
     public void serialize(UserWrapper wrapper, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartObject();
-        jsonGenerator.writeStringField("name", wrapper.getClient().getName());
-        jsonGenerator.writeStringField("lastName", wrapper.getClient().getLastName());
+        jsonGenerator.writeStringField("username", wrapper.getUsername());
         jsonGenerator.writeStringField("email", wrapper.getClient().getEmail());
         jsonGenerator.writeEndObject();
     }

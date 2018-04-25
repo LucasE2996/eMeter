@@ -17,11 +17,10 @@ public class UserDeserializer extends JsonDeserializer<UserWrapper> {
         ObjectCodec objectCodec = jsonParser.getCodec();
         JsonNode jsonNode = objectCodec.readTree(jsonParser);
 
-        final String name = jsonNode.get("name").asText();
-        final String lastName = jsonNode.get("last_name").asText();
+        final String name = jsonNode.get("username").asText();
         final String email = jsonNode.get("email").asText();
         final String password = jsonNode.get("password").asText();
 
-        return new UserWrapper(new Client(name, lastName, email, password));
+        return new UserWrapper(new Client(name, email, password));
     }
 }
