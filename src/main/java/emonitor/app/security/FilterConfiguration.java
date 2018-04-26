@@ -12,13 +12,13 @@ public class FilterConfiguration {
     public FilterRegistrationBean someFilterRegistration() {
 
         FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setFilter(someFilter());
+        registration.setFilter(filterProxy());
         registration.addUrlPatterns("/*");
         registration.setName("springSecurityFilterChain");
         return registration;
     }
 
-    public DelegatingFilterProxy someFilter() {
+    public DelegatingFilterProxy filterProxy() {
         return new DelegatingFilterProxy();
     }
 }
