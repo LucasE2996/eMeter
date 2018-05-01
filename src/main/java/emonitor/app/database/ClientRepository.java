@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface ClientRepository extends CrudRepository<Client, Integer> {
 
     List<Client> findAll();
-    Optional<Client> findFirstByUsername(String username);
+    Optional<Client> findByUsername(String username);
 }
