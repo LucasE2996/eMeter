@@ -7,12 +7,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.NoSuchElementException;
 
 @RestController
 public class ClientController {
@@ -43,7 +43,7 @@ public class ClientController {
                 return new ResponseEntity<>(wrapper, responseHeaders, HttpStatus.OK);
             RestError error = new RestError(403, "You have no access to this page");
             return new ResponseEntity<>(error, responseHeaders, HttpStatus.FORBIDDEN);
-        } catch (NoSuchElementException e) {
+        } catch (UsernameNotFoundException e) {
             e.printStackTrace();
             RestError error = new RestError(401, "The client with ID: '" + id + "' could not be found");
             return new ResponseEntity<>(error, responseHeaders, HttpStatus.NOT_FOUND);

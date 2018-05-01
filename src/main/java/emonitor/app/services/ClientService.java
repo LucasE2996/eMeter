@@ -3,11 +3,9 @@ package emonitor.app.services;
 import emonitor.app.database.ClientRepository;
 import emonitor.app.domain.Client;
 import emonitor.app.wrapper.UserWrapper;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,7 +40,7 @@ public class ClientService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Client> client = repository.findFirstByUsername(username);
+        Optional<Client> client = repository.findByUsername(username);
         if (!client.isPresent()) {
             throw new UsernameNotFoundException(username);
         }
