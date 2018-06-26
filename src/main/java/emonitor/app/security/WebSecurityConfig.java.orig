@@ -33,10 +33,31 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         this.userSvc = userSvc;
     }
 
+<<<<<<< HEAD
+    /**
+     * Configure the authentication in memory - temporary solution
+     * @param auth authentication manager builder
+     * @throws Exception
+     */
+//    @Override
+//    protected void configure(AuthenticationManagerBuilder auth)
+//            throws Exception {
+//
+//        auth.inMemoryAuthentication()
+//                .passwordEncoder(new BCryptPasswordEncoder())
+//                .withUser("temporary").password("temporary").roles("ADMIN")
+//                .and()
+//                .withUser("user").password("userPass").roles("USER");
+//    }
+
     /**
      * configure how requests are secured by interceptors
      * @param http the security configure builder
      */
+=======
+
+    // configure how requests are secured by interceptors
+>>>>>>> fe8fb300a0da7ea99d8d76337dd3f79b8e461480
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -50,7 +71,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().fullyAuthenticated()
                 .and()
             .formLogin()
+<<<<<<< HEAD
+=======
                 .loginProcessingUrl("/loginprocess")
+>>>>>>> fe8fb300a0da7ea99d8d76337dd3f79b8e461480
                 .successHandler(mySuccessHandler())
                 .failureHandler(new SimpleUrlAuthenticationFailureHandler())
                 .and()
@@ -67,10 +91,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+<<<<<<< HEAD
     /**
      * Get authentication success handler
      * @return MySavedRequestAwareAuthenticationSuccessHandler
      */
+=======
+>>>>>>> fe8fb300a0da7ea99d8d76337dd3f79b8e461480
     @Bean
     public SimpleUrlAuthenticationSuccessHandler mySuccessHandler() {
         return new MySavedRequestAwareAuthenticationSuccessHandler();
