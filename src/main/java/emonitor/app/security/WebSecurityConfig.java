@@ -34,9 +34,27 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
+     * Configure the authentication in memory - temporary solution
+     * @param auth authentication manager builder
+     * @throws Exception
+     */
+//    @Override
+//    protected void configure(AuthenticationManagerBuilder auth)
+//            throws Exception {
+//
+//        auth.inMemoryAuthentication()
+//                .passwordEncoder(new BCryptPasswordEncoder())
+//                .withUser("temporary").password("temporary").roles("ADMIN")
+//                .and()
+//                .withUser("user").password("userPass").roles("USER");
+//    }
+
+    /**
      * configure how requests are secured by interceptors
      * @param http the security configure builder
      */
+
+    // configure how requests are secured by interceptors
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -50,6 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().fullyAuthenticated()
                 .and()
             .formLogin()
+                .loginProcessingUrl("/loginprocess")
                 .loginProcessingUrl("/loginprocess")
                 .successHandler(mySuccessHandler())
                 .failureHandler(new SimpleUrlAuthenticationFailureHandler())
