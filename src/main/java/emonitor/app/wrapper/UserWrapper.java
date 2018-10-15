@@ -28,6 +28,10 @@ public class UserWrapper implements UserDetails {
         return createAuthorityList("USER");
     }
 
+    public Integer getId() {
+        return getClient().getId();
+    }
+
     @Override
     public String getPassword() {
         return getClient().getPassword();

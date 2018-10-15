@@ -10,10 +10,12 @@ import emonitor.app.services.RestError;
 import emonitor.app.wrapper.MeterWrapper;
 import emonitor.app.wrapper.UserWrapper;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -49,14 +51,15 @@ public class MeterController {
             final UserWrapper userWrapper1 = (UserWrapper) auth.getPrincipal();
             final UserWrapper userWrapper = new UserWrapper(clientService.getUser(clientId));
             if (userWrapper.getUsername().equals(userWrapper1.getUsername())) {
-                Client client = userWrapper.getClient();
-                final Meter meter = new Meter("Meter", new Watt(0), new Report(0,0,0));
-                final MeterWrapper wrapper = new MeterWrapper(meter);
-                client.addMeter(wrapper.getMeter());
-                wrapper.getMeter().setClient(client);
-                service.save(wrapper.getMeter());
-                clientService.save(client);
-                return new ResponseEntity<>(wrapper, responseHeaders, HttpStatus.CREATED);
+                Client user = userWrapper.getClient();
+                RestTemplate restTemplate = new RestTemplate();
+                MeterWrapper meter = restTemplate.getForObject("https://api.thingspeak.com/channels/456741/fields/1.json?api_key=K7Q13A7CLNUZTMPX&results=2", MeterWrapper.class);
+                // final Meter meter = new Meter("Meter", new Watt(0, 0), new Report(0,0,0));
+                user.addMeter(meter.getMeter());
+                meter.getMeter().setClient(user);
+                service.save(meter.getMeter());
+                clientService.save(user);
+                return new ResponseEntity<>(meter, responseHeaders, HttpStatus.CREATED);
             } else {
                 RestError error = new RestError(403, "You have no access to this page");
                 return new ResponseEntity<>(error, responseHeaders, HttpStatus.FORBIDDEN);

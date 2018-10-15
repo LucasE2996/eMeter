@@ -13,6 +13,7 @@ public class MeterSerializer extends JsonSerializer<MeterWrapper> {
         jsonGenerator.writeStartObject();
         jsonGenerator.writeNumberField("id", meterWrapper.getMeter().getId());
         jsonGenerator.writeNumberField("client_id", meterWrapper.getMeter().getClient().getId());
+        jsonGenerator.writeStringField("channel_id", meterWrapper.getMeter().getChannel_id());
         jsonGenerator.writeStringField("name", meterWrapper.getMeter().getName());
         jsonGenerator.writeObjectField("watt", meterWrapper.getMeter().getWatt());
         jsonGenerator.writeObjectField("report", meterWrapper.getMeter().getReport());

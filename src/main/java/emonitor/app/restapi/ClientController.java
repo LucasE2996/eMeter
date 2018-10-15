@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -25,27 +26,26 @@ public class ClientController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @GetMapping(value = "/user/{id}/detail", produces = "application/json")
+    @GetMapping(value = "/user/detail", produces = "application/json")
     public ResponseEntity<?> getUser(
-            @PathVariable int id,
             Authentication auth,
             UriComponentsBuilder ucb) {
         final URI location = ucb
                 .path("/user/")
-                .path(String.valueOf(id))
                 .path("detail").build().toUri();
         final HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(location);
+        final UserWrapper userWrapper = (UserWrapper) auth.getPrincipal();
         try {
-            final UserWrapper wrapper2 = (UserWrapper) auth.getPrincipal();
-            final UserWrapper wrapper = new UserWrapper(clientService.getUser(id));
-            if (wrapper.getUsername().equals(wrapper2.getUsername()))
-                return new ResponseEntity<>(wrapper, responseHeaders, HttpStatus.OK);
+            final UserDetails userDetails = clientService.loadUserByUsername(userWrapper.getUsername());
+            if (userDetails.getUsername().equals(userWrapper.getUsername()) &&
+                userDetails.getPassword().equals(userWrapper.getPassword()))
+                    return new ResponseEntity<>(userDetails, responseHeaders, HttpStatus.OK);
             RestError error = new RestError(403, "You have no access to this page");
             return new ResponseEntity<>(error, responseHeaders, HttpStatus.FORBIDDEN);
         } catch (UsernameNotFoundException e) {
             e.printStackTrace();
-            RestError error = new RestError(401, "The client with ID: '" + id + "' could not be found");
+            RestError error = new RestError(401, "The client with name '" + userWrapper.getUsername() + "' could not be found");
             return new ResponseEntity<>(error, responseHeaders, HttpStatus.NOT_FOUND);
         }
     }
