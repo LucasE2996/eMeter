@@ -18,4 +18,7 @@ public class Report {
     }
 
     protected Report() {}
+
+//    public double calculateDayAvarage() {
+//    }
 }

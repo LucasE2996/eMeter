@@ -22,23 +22,12 @@ public class Client {
     @Getter @Setter private String username;
     @Getter private String email;
     @Getter @Setter private String password;
-    @OneToMany(mappedBy = "client")
-    private List<Meter> meters;
 
     public Client(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password  = password;
-        this.meters = new ArrayList<>();
     }
 
     protected Client() {}
-
-    public List<Meter> getMeters() {
-        return Collections.unmodifiableList(meters);
-    }
-
-    public void addMeter(Meter meter) {
-        meters.add(meter);
-    }
 }

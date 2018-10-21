@@ -2,19 +2,19 @@ package emonitor.app.restapi;
 
 import emonitor.app.domain.Client;
 import emonitor.app.domain.Meter;
-import emonitor.app.domain.Report;
-import emonitor.app.domain.Watt;
 import emonitor.app.services.ClientService;
 import emonitor.app.services.MeterService;
 import emonitor.app.services.RestError;
+import emonitor.app.domain.ThingSpeakAdapter;
+import emonitor.app.services.ThingSpeakService;
 import emonitor.app.wrapper.MeterWrapper;
 import emonitor.app.wrapper.UserWrapper;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -28,10 +28,15 @@ public class MeterController {
 
     private final MeterService service;
     private final ClientService clientService;
+    private final ThingSpeakService tsService;
 
-    public MeterController(MeterService service, ClientService clientService) {
+    public MeterController(
+            MeterService service,
+            ClientService clientService,
+            ThingSpeakService thingSpeakService) {
         this.service = service;
         this.clientService = clientService;
+        this.tsService = thingSpeakService;
     }
 
     @PostMapping(value = "/user/{clientId}/new-meter",
@@ -40,7 +45,8 @@ public class MeterController {
     public ResponseEntity<?> createMeter(
             @PathVariable int clientId,
             Authentication auth,
-            UriComponentsBuilder ucb) {
+            UriComponentsBuilder ucb
+            ) {
         URI location = ucb
                 .path("/user/")
                 .path(String.valueOf(clientId))
@@ -51,15 +57,12 @@ public class MeterController {
             final UserWrapper userWrapper1 = (UserWrapper) auth.getPrincipal();
             final UserWrapper userWrapper = new UserWrapper(clientService.getUser(clientId));
             if (userWrapper.getUsername().equals(userWrapper1.getUsername())) {
-                Client user = userWrapper.getClient();
-                RestTemplate restTemplate = new RestTemplate();
-                MeterWrapper meter = restTemplate.getForObject("https://api.thingspeak.com/channels/456741/fields/1.json?api_key=K7Q13A7CLNUZTMPX&results=2", MeterWrapper.class);
-                // final Meter meter = new Meter("Meter", new Watt(0, 0), new Report(0,0,0));
-                user.addMeter(meter.getMeter());
-                meter.getMeter().setClient(user);
-                service.save(meter.getMeter());
+                final Client user = userWrapper.getClient();
+                final Meter meter = tsService.getMeterConverted();
+                meter.setClient(user);
+                service.save(meter);
                 clientService.save(user);
-                return new ResponseEntity<>(meter, responseHeaders, HttpStatus.CREATED);
+                return new ResponseEntity<>(new MeterWrapper(meter), responseHeaders, HttpStatus.CREATED);
             } else {
                 RestError error = new RestError(403, "You have no access to this page");
                 return new ResponseEntity<>(error, responseHeaders, HttpStatus.FORBIDDEN);
@@ -68,6 +71,10 @@ public class MeterController {
             e.printStackTrace();
             RestError error = new RestError(404, "User id: " + clientId + " could not be found");
             return new ResponseEntity<>(error, responseHeaders, HttpStatus.NOT_FOUND);
+        } catch (RestClientException e) {
+            e.printStackTrace();
+            RestError error = new RestError(404, "Could not get any element in ThingSpeak API");
+            return new ResponseEntity<>(error, responseHeaders, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -95,7 +102,7 @@ public class MeterController {
         return new ResponseEntity<>(error, responseHeaders, HttpStatus.FORBIDDEN);
     }
 
-    @GetMapping(value = "user/{userId}/meter/{id}/detail",
+    @GetMapping(value = "user/{userId}/meter/{id}/updatePower",
             produces = "application/json")
     public ResponseEntity<?> getMeter(
             Authentication auth,
@@ -111,17 +118,21 @@ public class MeterController {
         responseHeaders.setLocation(location);
         try {
             final UserWrapper userWrapper1 = (UserWrapper) auth.getPrincipal();
-            final UserWrapper userWrapper = new UserWrapper(clientService.getUser(userId));
-            if (userWrapper.getUsername().equals(userWrapper1.getUsername())) {
-                final MeterWrapper wrapper = new MeterWrapper(service.get(id));
-                return new ResponseEntity<>(wrapper, responseHeaders, HttpStatus.OK);
-            } else {
-                RestError error = new RestError(403, "You have no access to this page");
-                return new ResponseEntity<>(error, responseHeaders, HttpStatus.FORBIDDEN);
+                final UserWrapper userWrapper = new UserWrapper(clientService.getUser(userId));
+                if (userWrapper.getUsername().equals(userWrapper1.getUsername())) {
+                    Meter meter = service.get(id);
+                    // Restriction: the tsService is static, to add new meter you have to modify this Class
+                    // and add a new url
+                    meter.updatePower(tsService.getMeterPower());
+                    service.save(meter);
+                    return new ResponseEntity<>(meter.getPower(), responseHeaders, HttpStatus.OK);
+                } else {
+                    RestError error = new RestError(403, "You have no access to this page");
+                    return new ResponseEntity<>(error, responseHeaders, HttpStatus.FORBIDDEN);
             }
         } catch (NoSuchElementException e) {
             e.printStackTrace();
-            RestError error = new RestError(4, "Meter id: " + id + "could not be found");
+            RestError error = new RestError(4, "Meter id: " + id + " could not be found");
             return new ResponseEntity<>(error, responseHeaders, HttpStatus.NOT_FOUND);
         }
     }

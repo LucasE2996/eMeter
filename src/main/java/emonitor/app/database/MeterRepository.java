@@ -10,5 +10,6 @@ import java.util.Optional;
 @Repository
 public interface MeterRepository extends CrudRepository<Meter, Integer> {
 
+    Meter findByChannel(Integer channel);
     List<Meter> findAllByClientId(Integer id);
 }
