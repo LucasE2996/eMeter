@@ -6,6 +6,7 @@ import emonitor.app.domain.Watt;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.sql.Date;
 import java.util.Optional;
 
 @Service
@@ -20,6 +21,8 @@ public class ThingSpeakService {
 
     /**
      * If the return value is 0 is probably because one the values returned null from ThingSpeak API.
+     *
+     * @return The current power value from TS API
      */
     public double getMeterPower() {
         final double current = this.getMeterCurrent().isPresent() ? this.getMeterCurrent().get() : 0;
@@ -27,12 +30,17 @@ public class ThingSpeakService {
         return current * voltage;
     }
 
+    /**
+     * Converts the current meter from ThingSpeak API to Meter model.
+     *
+     * @return {@link Meter} The meter converted.
+     */
     public Meter getMeterConverted() {
         final ThingSpeakAdapter ts = this.restTemplate.getForObject(this.apiUrl, ThingSpeakAdapter.class);
         return new Meter(
                 ts.getName(),
                 ts.getId(),
-                new Watt(this.getMeterPower())
+                new Watt(this.getMeterPower(), Date.valueOf(ts.getCreatedDate()))
         );
     }
 

@@ -40,6 +40,10 @@ public class ThingSpeakAdapter {
     public String getField2() {
         return getFeeds().get(0).getField2();
     }
+
+    public String getCreatedDate() {
+        return getFeeds().get(0).getCreated_at();
+    }
 }
 
 class Feed {
