@@ -14,7 +14,7 @@ public class Meter {
     @Getter private Integer channel;
     @Getter @Setter private String name;
     @Getter private Watt watt;
-    @Getter @Setter private Report report;
+    @Getter private Report report;
     @ManyToOne(fetch = FetchType.LAZY)
     @Getter @Setter private Client client;
 
@@ -29,7 +29,8 @@ public class Meter {
 
     public void updatePower(double power) {
         this.getWatt().setValue(power);
-        // TODO - update report also
+        this.getWatt().calcMinAndMaxValue();
+        this.getReport().addData(this.getWatt());
     }
 
     public double getPower() {

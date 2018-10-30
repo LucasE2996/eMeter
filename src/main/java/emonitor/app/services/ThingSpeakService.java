@@ -6,17 +6,21 @@ import emonitor.app.domain.Watt;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
 public class ThingSpeakService {
 
     private final RestTemplate restTemplate;
+    private final SimpleDateFormat dateFormat;
     private final String apiUrl = "https://api.thingspeak.com/channels/456741/feeds.json?api_key=K7Q13A7CLNUZTMPX&results=1";
 
-    public ThingSpeakService(RestTemplate restTemplate) {
+    public ThingSpeakService(RestTemplate restTemplate, SimpleDateFormat dateFormat) {
         this.restTemplate = restTemplate;
+        this.dateFormat = dateFormat;
     }
 
     /**
@@ -40,7 +44,7 @@ public class ThingSpeakService {
         return new Meter(
                 ts.getName(),
                 ts.getId(),
-                new Watt(this.getMeterPower(), Date.valueOf(ts.getCreatedDate()))
+                new Watt(this.getMeterPower(), this.convertDate(ts.getCreatedDate()))
         );
     }
 
@@ -52,5 +56,16 @@ public class ThingSpeakService {
     private Optional<Double> getMeterVoltage() {
         final ThingSpeakAdapter voltagePayload = this.restTemplate.getForObject(this.apiUrl, ThingSpeakAdapter.class);
         return Optional.of(Double.parseDouble(voltagePayload.getField2()));
+    }
+
+    private Date convertDate(String date) {
+        try {
+            String str = date.replace("T", "");
+            date = str.replace("Z", "");
+            return this.dateFormat.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

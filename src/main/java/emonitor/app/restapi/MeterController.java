@@ -125,7 +125,7 @@ public class MeterController {
                     // and add a new url
                     meter.updatePower(tsService.getMeterPower());
                     service.save(meter);
-                    return new ResponseEntity<>(meter.getPower(), responseHeaders, HttpStatus.OK);
+                    return new ResponseEntity<>(new MeterWrapper(meter), responseHeaders, HttpStatus.OK);
                 } else {
                     RestError error = new RestError(403, "You have no access to this page");
                     return new ResponseEntity<>(error, responseHeaders, HttpStatus.FORBIDDEN);

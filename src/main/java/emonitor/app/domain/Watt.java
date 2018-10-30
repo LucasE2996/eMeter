@@ -22,6 +22,8 @@ public class Watt {
         this.calendar = Calendar.getInstance();
     }
 
+    protected Watt() {}
+
     public int day() {
         this.calendar.setTime(this.date);
         return this.calendar.get(Calendar.DAY_OF_MONTH);
@@ -31,9 +33,6 @@ public class Watt {
         this.calendar.setTime(this.date);
         return this.calendar.get(Calendar.MONTH);
     }
-
-
-    protected Watt() {}
 
     public void calcMinAndMaxValue() {
         this.minValue = this.value < this.minValue ? this.value : this.minValue;
