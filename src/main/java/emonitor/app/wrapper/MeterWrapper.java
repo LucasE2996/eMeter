@@ -1,6 +1,5 @@
 package emonitor.app.wrapper;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import emonitor.app.domain.Meter;
 import emonitor.app.serialization.MeterSerializer;
