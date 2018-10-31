@@ -16,10 +16,11 @@ Gerenciar o controle de gastos evitando o desperdício através da conferência 
 Tecnologias usadas:
 -----------------
 Frontend:
-- Phonegap
+- Ionic 3
 
 Backend:
 - Spring boot
+- PostgreSQL
 
 Server:
 - Heroku
@@ -28,6 +29,14 @@ Server:
 Hardware:
 - ESP8266
 
+## How to use:
+
+Clone the code from Github
+Set up PostgreDQL database on your machine with
+user: postgres
+pass: 78951
 
 ---------------------------------------
 TCC College Project - All rights reserved
+
+
