@@ -76,13 +76,13 @@ public class Report {
 
     private double sumTotal(Queue<Watt> value) {
         return value.stream()
-                .mapToDouble(data -> data.getValue())
+                .mapToDouble(Watt::getValue)
                 .sum();
     }
 
     private double sumTotal(ArrayList<Watt> value) {
         return value.stream()
-                .mapToDouble(data -> data.getValue())
+                .mapToDouble(Watt::getValue)
                 .sum();
     }
 }
