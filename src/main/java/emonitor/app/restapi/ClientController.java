@@ -15,6 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 
+@CrossOrigin(origins = "*")
 @RestController
 public class ClientController {
 
@@ -25,8 +26,7 @@ public class ClientController {
         this.clientService = clientService;
         this.passwordEncoder = passwordEncoder;
     }
-
-    @GetMapping(value = "/user/detail", produces = "application/json")
+    @GetMapping(value = "user/detail", produces = "application/json")
     public ResponseEntity<?> getUser(
             Authentication auth,
             UriComponentsBuilder ucb) {
@@ -35,12 +35,13 @@ public class ClientController {
                 .path("detail").build().toUri();
         final HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(location);
+        responseHeaders.setAccessControlAllowOrigin("*");
         final UserWrapper userWrapper = (UserWrapper) auth.getPrincipal();
         try {
             final UserDetails userDetails = clientService.loadUserByUsername(userWrapper.getUsername());
             if (userDetails.getUsername().equals(userWrapper.getUsername()) &&
                 userDetails.getPassword().equals(userWrapper.getPassword()))
-                    return new ResponseEntity<>(userDetails, responseHeaders, HttpStatus.OK);
+                return new ResponseEntity<>(userDetails, responseHeaders, HttpStatus.OK);
             RestError error = new RestError(403, "You have no access to this page");
             return new ResponseEntity<>(error, responseHeaders, HttpStatus.FORBIDDEN);
         } catch (UsernameNotFoundException e) {
