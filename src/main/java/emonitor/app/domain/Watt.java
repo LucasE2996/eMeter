@@ -5,11 +5,12 @@ import lombok.Setter;
 import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
 @Embeddable
-public class Watt {
+public class Watt  implements Serializable {
     @Getter @Setter private double value;
     @Getter @Setter private double maxValue;
     @Getter @Setter private double minValue;

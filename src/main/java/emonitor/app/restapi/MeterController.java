@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+@CrossOrigin
 @RestController
 public class MeterController {
 
@@ -102,7 +103,7 @@ public class MeterController {
         return new ResponseEntity<>(error, responseHeaders, HttpStatus.FORBIDDEN);
     }
 
-    @GetMapping(value = "user/{userId}/meter/{id}/updatePower",
+    @GetMapping(value = "/user/{userId}/meter/{id}/updatePower",
             produces = "application/json")
     public ResponseEntity<?> getMeter(
             Authentication auth,

@@ -3,10 +3,11 @@ package emonitor.app.domain;
 import lombok.Getter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.*;
 
 @Embeddable
-public class Report {
+public class Report implements Serializable {
 
     @Getter private double dayAverage;
     @Getter private double weekAverage;
