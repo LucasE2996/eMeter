@@ -103,7 +103,7 @@ public class MeterController {
         return new ResponseEntity<>(error, responseHeaders, HttpStatus.FORBIDDEN);
     }
 
-    @GetMapping(value = "/user/{userId}/meter/{id}/updatePower",
+    @GetMapping(value = "/user/{userId}/meter/{id}/detail",
             produces = "application/json")
     public ResponseEntity<?> getMeter(
             Authentication auth,
