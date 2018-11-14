@@ -13,7 +13,7 @@ public class Report implements Serializable {
     @Getter private double weekAverage;
     @Getter private double monthAverage;
     @Getter private ArrayList<Watt> dayData;
-    @Getter private Queue<Watt> weekData;
+    @Getter private ArrayList<Watt> weekData;
     @Getter private ArrayList<Watt> monthData;
 
     public Report(double dayAverage, double weekAverage, double monthAverage) {
@@ -21,7 +21,7 @@ public class Report implements Serializable {
         this.weekAverage = weekAverage;
         this.monthAverage = monthAverage;
         this.dayData = new ArrayList<>();
-        this.weekData = new ArrayDeque<>();
+        this.weekData = new ArrayList<>();
         this.monthData = new ArrayList<>();
     }
 
@@ -59,9 +59,9 @@ public class Report implements Serializable {
 
     private void addWeekData(Watt value) {
         if (this.getWeekData().size() > 0) {
-            if (this.weekData.size() > 7 ) {
-                this.weekData.remove();
-                this.weekData.add(value);
+            if ((this.weekData.get(0).day() - this.weekData.get(this.weekData.size() - 1).day()) < -5 ) {
+                this.getWeekData().clear();
+                this.addData(value);
             } else this.weekData.add(value);
         } else this.weekData.add(value);
     }
