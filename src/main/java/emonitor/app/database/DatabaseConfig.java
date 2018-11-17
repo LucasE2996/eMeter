@@ -20,12 +20,13 @@ import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager;
 import org.springframework.orm.jpa.persistenceunit.PersistenceUnitManager;
-import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.EclipseLinkJpaDialect;
 import org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import static org.springframework.orm.jpa.vendor.Database.H2;
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.springframework.orm.jpa.vendor.Database.POSTGRESQL;
 
 /**
@@ -73,6 +74,7 @@ public class DatabaseConfig {
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(final JpaVendorAdapter jpaVendorAdapter, final JpaDialect dialect) {
         final LocalContainerEntityManagerFactoryBean emfb = new LocalContainerEntityManagerFactoryBean();
+//        emfb.setJpaPropertyMap(this.jpaPropertyMap());
         emfb.setJpaVendorAdapter(jpaVendorAdapter);
         emfb.setJpaDialect(dialect);
         emfb.setPersistenceUnitName("postgres-eclipselink");
@@ -85,4 +87,18 @@ public class DatabaseConfig {
         transactionManager.setEntityManagerFactory(factory);
         return transactionManager;
     }
+
+//    private Map<String, String> jpaPropertyMap() {
+//        final HashMap<String, String> map = new HashMap<>();
+////        map.put("javax.persistence.jdbc.url", "jdbc:postgresql://localhost:5432/postgres");
+//        map.put("javax.persistence.jdbc.url", System.getenv());
+//
+////        map.put("javax.persistence.jdbc.user", "postgres");
+//        map.put("javax.persistence.jdbc.user", "postgres");
+//
+////        map.put("javax.persistence.jdbc.password", "78951");
+//        map.put("javax.persistence.jdbc.password", "78951");
+//
+//        return map;
+//    }
 }
