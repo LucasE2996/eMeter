@@ -62,6 +62,6 @@ public class ClientController {
         responseHeaders.setLocation(location);
         wrapper.getClient().setPassword(passwordEncoder.encode(wrapper.getPassword()));
         clientService.save(wrapper.getClient());
-        return new ResponseEntity<>(responseHeaders, HttpStatus.CREATED);
+        return new ResponseEntity<>(wrapper, responseHeaders, HttpStatus.CREATED);
     }
 }

@@ -5,6 +5,7 @@
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
+            <property name="javax.persistence.jdbc.uri" value="postgres://rzjhqgsmozoagx:8b876591287fdccd40c26fdf62001a8e243aa19a2fae2e7a485455ae3b45a28a@ec2-54-243-130-33.compute-1.amazonaws.com:5432/d9v2bvgt5qfe15" />
             <!--<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/postgres" />-->
             <!--<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://ec2-54-243-130-33.compute-1.amazonaws.com:5432/d9v2bvgt5qfe15" />-->
             <!--<property name="javax.persistence.jdbc.user" value="postgres" />-->

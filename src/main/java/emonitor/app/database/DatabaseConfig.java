@@ -1,10 +1,3 @@
-/*
- * @(#)DatabaseConfig.java 1.0 09/09/2015
- *
- * Copyright (c) 2015, Embraer. All rights reserved. Embraer S/A
- * proprietary/confidential. Use is subject to license terms.
- */
-
 package emonitor.app.database;
 
 import javax.persistence.EntityManagerFactory;
@@ -74,7 +67,7 @@ public class DatabaseConfig {
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(final JpaVendorAdapter jpaVendorAdapter, final JpaDialect dialect) {
         final LocalContainerEntityManagerFactoryBean emfb = new LocalContainerEntityManagerFactoryBean();
-        emfb.setJpaPropertyMap(this.jpaPropertyMap());
+//        emfb.setJpaPropertyMap(this.jpaPropertyMap());
         emfb.setJpaVendorAdapter(jpaVendorAdapter);
         emfb.setJpaDialect(dialect);
         emfb.setPersistenceUnitName("postgres-eclipselink");
@@ -88,21 +81,24 @@ public class DatabaseConfig {
         return transactionManager;
     }
 
-    private Map<String, String> jpaPropertyMap() {
-        HashMap<String, String> map = new HashMap<>();
-        String jdbcDbUrl = System.getenv("JDBC_DATABASE_URL");
-
-        if (null != jdbcDbUrl) {
-//            map.put("javax.persistence.jdbc.url", "jdbc:postgresql://localhost:5432/postgres");
-            map.put("javax.persistence.jdbc.url", jdbcDbUrl);
-
-//            map.put("javax.persistence.jdbc.user", "postgres");
-            map.put("javax.persistence.jdbc.user", System.getenv("JDBC_DATABASE_USERNAME"));
-
-//            map.put("javax.persistence.jdbc.password", "78951");
-            map.put("javax.persistence.jdbc.password", System.getenv("JDBC_DATABASE_PASSWORD"));
-        }
-
-        return map;
-    }
+    /**
+     * Return a map which contains custom configuration of jdbc credentials.
+     */
+//    private Map<String, String> jpaPropertyMap() {
+//        HashMap<String, String> map = new HashMap<>();
+//        String jdbcDbUrl = System.getenv("JDBC_DATABASE_URL");
+//
+//        if (null != jdbcDbUrl) {
+////            map.put("javax.persistence.jdbc.url", "jdbc:postgresql://localhost:5432/postgres");
+//            map.put("javax.persistence.jdbc.url", jdbcDbUrl);
+//
+////            map.put("javax.persistence.jdbc.user", "postgres");
+//            map.put("javax.persistence.jdbc.user", System.getenv("JDBC_DATABASE_USERNAME"));
+//
+////            map.put("javax.persistence.jdbc.password", "78951");
+//            map.put("javax.persistence.jdbc.password", System.getenv("JDBC_DATABASE_PASSWORD"));
+//        }
+//
+//        return map;
+//    }
 }
