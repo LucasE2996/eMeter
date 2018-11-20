@@ -17,6 +17,8 @@ import org.springframework.orm.jpa.vendor.EclipseLinkJpaDialect;
 import org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,7 +69,7 @@ public class DatabaseConfig {
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(final JpaVendorAdapter jpaVendorAdapter, final JpaDialect dialect) {
         final LocalContainerEntityManagerFactoryBean emfb = new LocalContainerEntityManagerFactoryBean();
-//        emfb.setJpaPropertyMap(this.jpaPropertyMap());
+        emfb.setJpaPropertyMap(this.jpaPropertyMap());
         emfb.setJpaVendorAdapter(jpaVendorAdapter);
         emfb.setJpaDialect(dialect);
         emfb.setPersistenceUnitName("postgres-eclipselink");
@@ -84,21 +86,30 @@ public class DatabaseConfig {
     /**
      * Return a map which contains custom configuration of jdbc credentials.
      */
-//    private Map<String, String> jpaPropertyMap() {
-//        HashMap<String, String> map = new HashMap<>();
-//        String jdbcDbUrl = System.getenv("JDBC_DATABASE_URL");
-//
-//        if (null != jdbcDbUrl) {
-////            map.put("javax.persistence.jdbc.url", "jdbc:postgresql://localhost:5432/postgres");
-//            map.put("javax.persistence.jdbc.url", jdbcDbUrl);
-//
-////            map.put("javax.persistence.jdbc.user", "postgres");
-//            map.put("javax.persistence.jdbc.user", System.getenv("JDBC_DATABASE_USERNAME"));
-//
-////            map.put("javax.persistence.jdbc.password", "78951");
-//            map.put("javax.persistence.jdbc.password", System.getenv("JDBC_DATABASE_PASSWORD"));
-//        }
-//
-//        return map;
-//    }
+    private Map<String, String> jpaPropertyMap() {
+        HashMap<String, String> map = new HashMap<>();
+        URI dbUri = null;
+        try {
+            dbUri = new URI(System.getenv("DATABASE_URL"));
+        } catch (URISyntaxException error) {
+            error.printStackTrace();
+        }
+
+        String username = dbUri.getUserInfo().split(":")[0];
+        String password = dbUri.getUserInfo().split(":")[1];
+        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
+
+        if (null != dbUrl) {
+//            map.put("javax.persistence.jdbc.url", "jdbc:postgresql://localhost:5432/postgres");
+            map.put("javax.persistence.jdbc.url", dbUrl);
+
+//            map.put("javax.persistence.jdbc.user", "postgres");
+            map.put("javax.persistence.jdbc.user", username);
+
+//            map.put("javax.persistence.jdbc.password", "78951");
+            map.put("javax.persistence.jdbc.password", password);
+        }
+
+        return map;
+    }
 }
