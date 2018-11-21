@@ -98,6 +98,7 @@ public class DatabaseConfig {
         String username = dbUri.getUserInfo().split(":")[0];
         String password = dbUri.getUserInfo().split(":")[1];
         String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
+        System.out.println("---------------------------------------------\n\n\n" + dbUrl + "------------------\n\n\n");
 
         if (null != dbUrl) {
 //            map.put("javax.persistence.jdbc.url", "jdbc:postgresql://localhost:5432/postgres");
