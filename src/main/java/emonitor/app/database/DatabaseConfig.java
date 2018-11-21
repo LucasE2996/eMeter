@@ -88,7 +88,7 @@ public class DatabaseConfig {
      */
     private Map<String, String> jpaPropertyMap() {
         HashMap<String, String> map = new HashMap<>();
-        URI dbUri = null;
+        /*URI dbUri = null;
         try {
             dbUri = new URI(System.getenv("DATABASE_URL"));
         } catch (URISyntaxException error) {
@@ -98,18 +98,18 @@ public class DatabaseConfig {
         String username = dbUri.getUserInfo().split(":")[0];
         String password = dbUri.getUserInfo().split(":")[1];
         String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
-        System.out.println("---------------------------------------------\n\n\n" + dbUrl + "------------------\n\n\n");
+        System.out.println("---------------------------------------------\n\n\n" + dbUrl + "------------------\n\n\n");*/
 
-        if (null != dbUrl) {
-//            map.put("javax.persistence.jdbc.url", "jdbc:postgresql://localhost:5432/postgres");
-            map.put("javax.persistence.jdbc.url", dbUrl);
+//        if (null != dbUrl) {
+            map.put("javax.persistence.jdbc.url", "jdbc:postgresql://localhost:5432/postgres");
+//            map.put("javax.persistence.jdbc.url", dbUrl);
 
-//            map.put("javax.persistence.jdbc.user", "postgres");
-            map.put("javax.persistence.jdbc.user", username);
+            map.put("javax.persistence.jdbc.user", "postgres");
+//            map.put("javax.persistence.jdbc.user", username);
 
-//            map.put("javax.persistence.jdbc.password", "78951");
-            map.put("javax.persistence.jdbc.password", password);
-        }
+            map.put("javax.persistence.jdbc.password", "78951");
+//            map.put("javax.persistence.jdbc.password", password);
+//        }
 
         return map;
     }
