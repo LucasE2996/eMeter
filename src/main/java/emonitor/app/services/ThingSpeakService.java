@@ -24,9 +24,9 @@ public class ThingSpeakService {
     }
 
     /**
-     * If the return value is 0 is probably because one the values returned null from ThingSpeak API.
+     * If the return watts is 0 is probably because one the values returned null from ThingSpeak API.
      *
-     * @return The current power value from TS API
+     * @return The current power watts from TS API
      */
     public double getMeterPower() {
         final double current = this.getMeterCurrent().isPresent() ? this.getMeterCurrent().get() : 0;
@@ -44,16 +44,21 @@ public class ThingSpeakService {
         return new Meter(
                 ts.getName(),
                 ts.getId(),
-                new Watt(this.getMeterPower(), this.convertDate(ts.getCreatedDate()))
+                new Watt(
+                        this.getMeterVoltage().isPresent() ? this.getMeterVoltage().get() : 0,
+                        this.getMeterCurrent().isPresent() ? this.getMeterCurrent().get() : 0,
+                        this.getMeterPower(),
+                        this.convertDate(ts.getCreatedDate())
+                )
         );
     }
 
-    private Optional<Double> getMeterCurrent() {
+    public Optional<Double> getMeterCurrent() {
         final ThingSpeakAdapter currentPayload = this.restTemplate.getForObject(this.apiUrl, ThingSpeakAdapter.class);
         return Optional.of(Double.parseDouble(currentPayload.getField1()));
     }
 
-    private Optional<Double> getMeterVoltage() {
+    public Optional<Double> getMeterVoltage() {
         final ThingSpeakAdapter voltagePayload = this.restTemplate.getForObject(this.apiUrl, ThingSpeakAdapter.class);
         return Optional.of(Double.parseDouble(voltagePayload.getField2()));
     }

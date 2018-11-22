@@ -36,6 +36,10 @@ public class Report implements Serializable {
         this.calculateMonthAverage();
     }
 
+//    public double getWattsPerHour(double watts) {
+//        return (watts * ) /
+//    }
+
     private void calculateDayAverage() {
         this.dayAverage = this.sumTotal(this.dayData) / this.dayData.size();
     }
@@ -75,15 +79,9 @@ public class Report implements Serializable {
         } else this.monthData.add(value);
     }
 
-    private double sumTotal(Queue<Watt> value) {
-        return value.stream()
-                .mapToDouble(Watt::getValue)
-                .sum();
-    }
-
     private double sumTotal(ArrayList<Watt> value) {
         return value.stream()
-                .mapToDouble(Watt::getValue)
+                .mapToDouble(Watt::getWatts)
                 .sum();
     }
 }

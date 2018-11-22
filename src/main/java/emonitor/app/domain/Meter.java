@@ -15,6 +15,7 @@ public class Meter {
     @Getter @Setter private String name;
     @Getter private Watt watt;
     @Getter private Report report;
+    @Getter @Setter private double nominalPower;
     @ManyToOne(fetch = FetchType.LAZY)
     @Getter @Setter private Client client;
 
@@ -27,14 +28,17 @@ public class Meter {
 
     protected Meter() {}
 
-    public void updatePower(double power) {
-        this.getWatt().setValue(power);
+    public void updateValues(double voltage, double current, double watts) {
+        this.getWatt().setWatts(watts);
+        this.getWatt().setVoltage(voltage);
+        this.getWatt().setCurrent(current);
         this.getWatt().calcMinAndMaxValue();
         this.getReport().addData(this.getWatt());
     }
 
-    public double getPower() {
-        return getWatt().getValue();
+    public int getDiversion() {
+        final Double diversion =  -100 + ((this.getWatt().getWatts() * 100) / this.getNominalPower());
+        return diversion.intValue();
     }
 
 }

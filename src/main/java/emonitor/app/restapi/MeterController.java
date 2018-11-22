@@ -1,11 +1,12 @@
 package emonitor.app.restapi;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import emonitor.app.domain.Client;
 import emonitor.app.domain.Meter;
 import emonitor.app.services.ClientService;
 import emonitor.app.services.MeterService;
 import emonitor.app.services.RestError;
-import emonitor.app.domain.ThingSpeakAdapter;
 import emonitor.app.services.ThingSpeakService;
 import emonitor.app.wrapper.MeterWrapper;
 import emonitor.app.wrapper.UserWrapper;
@@ -15,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -45,6 +45,7 @@ public class MeterController {
             produces = "application/json")
     public ResponseEntity<?> createMeter(
             @PathVariable int clientId,
+            @RequestBody String nominalValue,
             Authentication auth,
             UriComponentsBuilder ucb
             ) {
@@ -60,6 +61,8 @@ public class MeterController {
             if (userWrapper.getUsername().equals(userWrapper1.getUsername())) {
                 final Client user = userWrapper.getClient();
                 final Meter meter = tsService.getMeterConverted();
+                JsonObject jobj = new Gson().fromJson(nominalValue, JsonObject.class);
+                meter.setNominalPower(jobj.get("nominalValue").getAsDouble());
                 meter.setClient(user);
                 service.save(meter);
                 clientService.save(user);
@@ -124,7 +127,11 @@ public class MeterController {
                     Meter meter = service.get(id);
                     // Restriction: the tsService is static, to add new meter you have to modify this Class
                     // and add a new url
-                    meter.updatePower(tsService.getMeterPower());
+                    meter.updateValues(
+                            tsService.getMeterVoltage().isPresent() ? tsService.getMeterVoltage().get() : 0,
+                            tsService.getMeterCurrent().isPresent() ? tsService.getMeterCurrent().get() : 0,
+                            tsService.getMeterPower()
+                    );
                     service.save(meter);
                     Meter teste = service.get(id);
                     System.out.println(teste);
