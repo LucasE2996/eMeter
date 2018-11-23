@@ -37,6 +37,11 @@ public class Watt  implements Serializable {
         return this.calendar.get(Calendar.MONTH);
     }
 
+    public int hour() {
+        this.calendar.setTime(this.date);
+        return this.calendar.get(Calendar.HOUR);
+    }
+
     public void calcMinAndMaxValue() {
         this.minValue = this.watts < this.minValue ? this.watts : this.minValue;
         this.maxValue = this.watts > this.maxValue ? this.watts : this.maxValue;
