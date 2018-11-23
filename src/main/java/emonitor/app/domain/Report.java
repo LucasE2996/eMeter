@@ -12,7 +12,6 @@ public class Report implements Serializable {
     @Getter private double dayAverage;
     @Getter private double weekAverage;
     @Getter private double monthAverage;
-    @Getter private ArrayList<Watt> hourData;
     @Getter private ArrayList<Watt> dayData;
     @Getter private ArrayList<Watt> weekData;
     @Getter private ArrayList<Watt> monthData;
@@ -21,7 +20,6 @@ public class Report implements Serializable {
         this.dayAverage = dayAverage;
         this.weekAverage = weekAverage;
         this.monthAverage = monthAverage;
-        this.hourData = new ArrayList<>();
         this.dayData = new ArrayList<>();
         this.weekData = new ArrayList<>();
         this.monthData = new ArrayList<>();
@@ -30,7 +28,6 @@ public class Report implements Serializable {
     protected Report() {}
 
     public void addData(Watt data) {
-        this.addHourData(data);
         this.addDayData(data);
         this.addWeekData(data);
         this.addMonthData(data);
@@ -53,19 +50,6 @@ public class Report implements Serializable {
 
     private void calculateMonthAverage() {
         this.monthAverage = this.sumTotal(this.monthData) / this.monthData.size();
-    }
-
-    private void addHourData(Watt value) {
-        int preLastValue = this.getHourData().get(this.getHourData().size() - 2).hour();
-        int lastValue = this.getHourData().get(this.getHourData().size() - 1).hour();
-        if (this.getHourData().size() > 0) {
-            if (lastValue > 24 ) {
-                this.getHourData().clear();
-                this.addData(value);
-            } else if(lastValue != preLastValue) {
-                this.dayData.add(value);
-            }
-        } else this.dayData.add(value);
     }
 
     private void addDayData(Watt value) {

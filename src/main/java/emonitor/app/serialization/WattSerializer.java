@@ -19,7 +19,6 @@ public class WattSerializer extends JsonSerializer<WattWrapper> {
         jsonGenerator.writeStringField("date", watt.getWatt().getDate().toString());
         jsonGenerator.writeStringField("month", Integer.toString(watt.getWatt().month()));
         jsonGenerator.writeStringField("day", Integer.toString(watt.getWatt().day()));
-        jsonGenerator.writeStringField("hour", Integer.toString(watt.getWatt().hour()));
         jsonGenerator.writeEndObject();
     }
 }
