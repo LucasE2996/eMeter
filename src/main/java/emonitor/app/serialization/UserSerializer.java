@@ -3,7 +3,6 @@ package emonitor.app.serialization;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import emonitor.app.domain.Meter;
 import emonitor.app.wrapper.UserWrapper;
 
 import java.io.IOException;

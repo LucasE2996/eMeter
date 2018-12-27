@@ -19,6 +19,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
+@RequestMapping("/user")
 public class ClientController {
 
     private final ClientService clientService;
@@ -29,28 +30,27 @@ public class ClientController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @GetMapping(value = "all", produces = "application/json")
+    @GetMapping(value = "/all", produces = "application/json")
     public ResponseEntity<?> getAllUsers(
             UriComponentsBuilder ucb) {
         final URI location = ucb
-                .path("all").build().toUri();
+                .path("/user")
+                .path("/all").build().toUri();
         final HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(location);
-        responseHeaders.setAccessControlAllowOrigin("*");
         final List<Client> users = clientService.getAll();
         return new ResponseEntity<>(users, responseHeaders, HttpStatus.OK);
     }
 
-    @GetMapping(value = "user/detail", produces = "application/json")
+    @GetMapping(value = "/detail", produces = "application/json")
     public ResponseEntity<?> getUser(
             Authentication auth,
             UriComponentsBuilder ucb) {
         final URI location = ucb
-                .path("/user/")
-                .path("detail").build().toUri();
+                .path("/user")
+                .path("/detail").build().toUri();
         final HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(location);
-        responseHeaders.setAccessControlAllowOrigin("*");
         final UserWrapper userWrapper = (UserWrapper) auth.getPrincipal();
         try {
             final UserDetails userDetails = clientService.loadUserByUsername(userWrapper.getUsername());
@@ -71,6 +71,7 @@ public class ClientController {
             @RequestBody UserWrapper wrapper,
             UriComponentsBuilder ucb) {
         final URI location = ucb
+                .path("/user")
                 .path("/register")
                 .build().toUri();
         final HttpHeaders responseHeaders = new HttpHeaders();

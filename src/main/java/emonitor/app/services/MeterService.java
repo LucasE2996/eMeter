@@ -1,7 +1,7 @@
 package emonitor.app.services;
 
 import emonitor.app.database.MeterRepository;
-import emonitor.app.domain.Meter;
+import emonitor.app.domain.Monitor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,19 +16,19 @@ public class MeterService {
         this.repository = repository;
     }
 
-    public void save(Meter meter) {
-        repository.save(meter);
+    public void save(Monitor monitor) {
+        repository.save(monitor);
     }
 
-    public void delete(Meter meter) {
-        repository.delete(meter);
+    public void delete(Monitor monitor) {
+        repository.delete(monitor);
     }
 
-    public Meter get(int id) {
+    public Monitor get(int id) {
         return repository.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
-    public List<Meter> getAll(int id) {
+    public List<Monitor> getAll(int id) {
         return repository.findAllByClientId(id);
     }
 }

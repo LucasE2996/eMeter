@@ -1,0 +1,21 @@
+2018-12-27 14:17:24 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Value too long for column "DAY_DATA BINARY(255)": "X'aced0005737200136a6176612e7574696c2e41727261794c6973747881d21d99c7619d03000149000473697a6578700000000177040000000173720018656d... (2609)"; SQL statement:
+update meter set channel=?, client_id=?, name=?, nominal_power=?, day_average=?, day_data=?, month_average=?, month_data=?, week_average=?, week_data=?, calendar=?, current=?, date=?, max_value=?, min_value=?, voltage=?, watts=? where id=? [22001-197]
+2018-12-27 14:22:39 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Value too long for column "DAY_DATA BINARY(255)": "X'aced0005737200136a6176612e7574696c2e41727261794c6973747881d21d99c7619d03000149000473697a6578700000000177040000000173720018656d... (2609)"; SQL statement:
+update meter set channel=?, client_id=?, name=?, nominal_power=?, day_average=?, day_data=?, month_average=?, month_data=?, week_average=?, week_data=?, calendar=?, current=?, date=?, max_value=?, min_value=?, voltage=?, watts=? where id=? [22001-197]
+2018-12-27 14:24:43 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Value too long for column "DAY_DATA BINARY(255)": "X'aced0005737200136a6176612e7574696c2e41727261794c6973747881d21d99c7619d03000149000473697a6578700000000177040000000173720018656d... (2609)"; SQL statement:
+update meter set channel=?, client_id=?, name=?, nominal_power=?, day_average=?, day_data=?, month_average=?, month_data=?, week_average=?, week_data=?, calendar=?, current=?, date=?, max_value=?, min_value=?, voltage=?, watts=? where id=? [22001-197]
+2018-12-27 14:28:05 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Value too long for column "DAY_DATA BINARY(255)": "X'aced0005737200136a6176612e7574696c2e41727261794c6973747881d21d99c7619d03000149000473697a6578700000000177040000000173720018656d... (2609)"; SQL statement:
+update meter set channel=?, client_id=?, name=?, nominal_power=?, day_average=?, day_data=?, month_average=?, month_data=?, week_average=?, week_data=?, calendar=?, current=?, date=?, max_value=?, min_value=?, voltage=?, watts=? where id=? [22001-197]
+2018-12-27 14:31:29 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Value too long for column "DAY_DATA BINARY(255)": "X'aced0005737200136a6176612e7574696c2e41727261794c6973747881d21d99c7619d03000149000473697a6578700000000177040000000173720018656d... (2609)"; SQL statement:
+update meter set channel=?, client_id=?, name=?, nominal_power=?, day_average=?, day_data=?, month_average=?, month_data=?, week_average=?, week_data=?, calendar=?, current=?, date=?, max_value=?, min_value=?, voltage=?, watts=? where id=? [22001-197]
+2018-12-27 14:34:18 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Value too long for column "DAY_DATA BINARY(255)": "X'aced0005737200136a6176612e7574696c2e41727261794c6973747881d21d99c7619d03000149000473697a6578700000000177040000000173720018656d... (2609)"; SQL statement:
+update meter set channel=?, client_id=?, name=?, nominal_power=?, day_average=?, day_data=?, month_average=?, month_data=?, week_average=?, week_data=?, calendar=?, current=?, date=?, max_value=?, min_value=?, voltage=?, watts=? where id=? [22001-197]
+2018-12-27 14:48:33 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Value too long for column "DAY_DATA BINARY(255)": "X'aced0005737200136a6176612e7574696c2e41727261794c6973747881d21d99c7619d03000149000473697a6578700000000177040000000173720018656d... (2609)"; SQL statement:
+update meter set channel=?, client_id=?, name=?, nominal_power=?, day_average=?, day_data=?, month_average=?, month_data=?, week_average=?, week_data=?, calendar=?, current=?, date=?, max_value=?, min_value=?, voltage=?, watts=? where id=? [22001-197]

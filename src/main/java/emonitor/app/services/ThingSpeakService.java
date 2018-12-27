@@ -1,6 +1,6 @@
 package emonitor.app.services;
 
-import emonitor.app.domain.Meter;
+import emonitor.app.domain.Monitor;
 import emonitor.app.domain.ThingSpeakAdapter;
 import emonitor.app.domain.Watt;
 import org.springframework.stereotype.Service;
@@ -35,13 +35,13 @@ public class ThingSpeakService {
     }
 
     /**
-     * Converts the current meter from ThingSpeak API to Meter model.
+     * Converts the current meter from ThingSpeak API to Monitor model.
      *
-     * @return {@link Meter} The meter converted.
+     * @return {@link Monitor} The meter converted.
      */
-    public Meter getMeterConverted() {
+    public Monitor getMeterConverted() {
         final ThingSpeakAdapter ts = this.restTemplate.getForObject(this.API_URL, ThingSpeakAdapter.class);
-        return new Meter(
+        return new Monitor(
                 ts.getName(),
                 ts.getId(),
                 new Watt(

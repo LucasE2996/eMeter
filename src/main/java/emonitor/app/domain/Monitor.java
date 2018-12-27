@@ -6,7 +6,7 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-public class Meter {
+public class Monitor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,14 +19,14 @@ public class Meter {
     @ManyToOne(fetch = FetchType.LAZY)
     @Getter @Setter private Client client;
 
-    public Meter(String defaultName, Integer channel, Watt watt) {
+    public Monitor(String defaultName, Integer channel, Watt watt) {
         this.name = defaultName;
         this.channel = channel;
         this.watt = watt;
         this.report = new Report(0,0,0);
     }
 
-    protected Meter() {}
+    protected Monitor() {}
 
     public void updateValues(double voltage, double current, double watts) {
         this.getWatt().setWatts(watts);

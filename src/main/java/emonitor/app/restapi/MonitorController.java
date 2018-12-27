@@ -3,7 +3,7 @@ package emonitor.app.restapi;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import emonitor.app.domain.Client;
-import emonitor.app.domain.Meter;
+import emonitor.app.domain.Monitor;
 import emonitor.app.services.ClientService;
 import emonitor.app.services.MeterService;
 import emonitor.app.services.RestError;
@@ -25,13 +25,14 @@ import java.util.NoSuchElementException;
 
 @CrossOrigin
 @RestController
-public class MeterController {
+@RequestMapping("/monitor")
+public class MonitorController {
 
     private final MeterService service;
     private final ClientService clientService;
     private final ThingSpeakService tsService;
 
-    public MeterController(
+    public MonitorController(
             MeterService service,
             ClientService clientService,
             ThingSpeakService thingSpeakService) {
@@ -40,19 +41,19 @@ public class MeterController {
         this.tsService = thingSpeakService;
     }
 
-    @PostMapping(value = "/user/{clientId}/new-meter",
+    @PostMapping(value = "/{clientId}/new-monitor",
             consumes = "application/json",
             produces = "application/json")
-    public ResponseEntity<?> createMeter(
+    public ResponseEntity<?> createMonitor(
             @PathVariable int clientId,
             @RequestBody String nominalValue,
             Authentication auth,
             UriComponentsBuilder ucb
             ) {
         URI location = ucb
-                .path("/user/")
+                .path("/monitor/")
                 .path(String.valueOf(clientId))
-                .path("new-meter").build().toUri();
+                .path("new-monitor").build().toUri();
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(location);
         try {
@@ -60,13 +61,13 @@ public class MeterController {
             final UserWrapper userWrapper = new UserWrapper(clientService.getUser(clientId));
             if (userWrapper.getUsername().equals(userWrapper1.getUsername())) {
                 final Client user = userWrapper.getClient();
-                final Meter meter = tsService.getMeterConverted();
+                final Monitor monitor = tsService.getMeterConverted();
                 JsonObject jobj = new Gson().fromJson(nominalValue, JsonObject.class);
-                meter.setNominalPower(jobj.get("nominalValue").getAsDouble());
-                meter.setClient(user);
-                service.save(meter);
+                monitor.setNominalPower(jobj.get("nominalValue").getAsDouble());
+                monitor.setClient(user);
+                service.save(monitor);
                 clientService.save(user);
-                return new ResponseEntity<>(new MeterWrapper(meter), responseHeaders, HttpStatus.CREATED);
+                return new ResponseEntity<>(new MeterWrapper(monitor), responseHeaders, HttpStatus.CREATED);
             } else {
                 RestError error = new RestError(403, "You have no access to this page");
                 return new ResponseEntity<>(error, responseHeaders, HttpStatus.FORBIDDEN);
@@ -82,31 +83,31 @@ public class MeterController {
         }
     }
 
-    @GetMapping(value = "/user/{clientId}/meters",
+    @GetMapping(value = "/{clientId}/monitors",
             produces = "application/json")
-    public ResponseEntity<?> getAllMeters(
+    public ResponseEntity<?> getAllMonitors(
             Authentication auth,
             @PathVariable int clientId,
             UriComponentsBuilder ucb) {
         URI location = ucb
-                .path("/user/")
+                .path("/monitor/")
                 .path(String.valueOf(clientId))
-                .path("/meters").build().toUri();
+                .path("/monitors").build().toUri();
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(location);
         final UserWrapper userWrapper1 = (UserWrapper) auth.getPrincipal();
         final UserWrapper userWrapper = new UserWrapper(clientService.getUser(clientId));
         if (userWrapper.getUsername().equals(userWrapper1.getUsername())) {
-            final List<Meter> meters = service.getAll(clientId);
+            final List<Monitor> monitors = service.getAll(clientId);
             final List<MeterWrapper> wrappers = new ArrayList<>();
-            meters.forEach(meter -> wrappers.add(new MeterWrapper(meter)));
+            monitors.forEach(meter -> wrappers.add(new MeterWrapper(meter)));
             return new ResponseEntity<>(wrappers, responseHeaders, HttpStatus.OK);
         }
         RestError error = new RestError(403, "You have no access to this page");
         return new ResponseEntity<>(error, responseHeaders, HttpStatus.FORBIDDEN);
     }
 
-    @GetMapping(value = "/user/{userId}/meter/{id}/detail",
+    @GetMapping(value = "/{userId}/monitors/{id}/detail",
             produces = "application/json")
     public ResponseEntity<?> getMeter(
             Authentication auth,
@@ -114,9 +115,10 @@ public class MeterController {
             @PathVariable int userId,
             UriComponentsBuilder ucb) {
         URI location = ucb
-                .path("/meter/")
+                .path("/monitor/")
+                .path(String.valueOf(userId))
+                .path("/detail/")
                 .path(String.valueOf(id))
-                .path("/detail")
                 .build().toUri();
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(location);
@@ -124,25 +126,23 @@ public class MeterController {
             final UserWrapper userWrapper1 = (UserWrapper) auth.getPrincipal();
                 final UserWrapper userWrapper = new UserWrapper(clientService.getUser(userId));
                 if (userWrapper.getUsername().equals(userWrapper1.getUsername())) {
-                    Meter meter = service.get(id);
-                    // Restriction: the tsService is static, to add new meter you have to modify this Class
+                    Monitor monitor = service.get(id);
+                    // Restriction: the tsService is static, to add new monitor you have to modify this Class
                     // and add a new url
-                    meter.updateValues(
+                    monitor.updateValues(
                             tsService.getMeterVoltage().isPresent() ? tsService.getMeterVoltage().get() : 0,
                             tsService.getMeterCurrent().isPresent() ? tsService.getMeterCurrent().get() : 0,
                             tsService.getMeterPower()
                     );
-                    service.save(meter);
-                    Meter teste = service.get(id);
-                    System.out.println(teste);
-                    return new ResponseEntity<>(new MeterWrapper(meter), responseHeaders, HttpStatus.OK);
+                    service.save(monitor);
+                    return new ResponseEntity<>(new MeterWrapper(monitor), responseHeaders, HttpStatus.OK);
                 } else {
                     RestError error = new RestError(403, "You have no access to this page");
                     return new ResponseEntity<>(error, responseHeaders, HttpStatus.FORBIDDEN);
             }
         } catch (NoSuchElementException e) {
             e.printStackTrace();
-            RestError error = new RestError(4, "Meter id: " + id + " could not be found");
+            RestError error = new RestError(4, "Monitor id: " + id + " could not be found");
             return new ResponseEntity<>(error, responseHeaders, HttpStatus.NOT_FOUND);
         }
     }

@@ -1,16 +1,14 @@
 package emonitor.app.database;
 
-import emonitor.app.domain.Meter;
+import emonitor.app.domain.Monitor;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
-public interface MeterRepository extends JpaRepository<Meter, Integer> {
+public interface MeterRepository extends JpaRepository<Monitor, Integer> {
 
-    Meter findByChannel(Integer channel);
-    List<Meter> findAllByClientId(Integer id);
+    Monitor findByChannel(Integer channel);
+    List<Monitor> findAllByClientId(Integer id);
 }
