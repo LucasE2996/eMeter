@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -24,30 +25,11 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
-    private final ClientService userSvc;
 
     public WebSecurityConfig(
-            RestAuthenticationEntryPoint restAuthenticationEntryPoint,
-            ClientService userSvc) {
+            RestAuthenticationEntryPoint restAuthenticationEntryPoint) {
         this.restAuthenticationEntryPoint = restAuthenticationEntryPoint;
-        this.userSvc = userSvc;
     }
-
-    /**
-     * Configure the authentication in memory - temporary solution
-     * @param auth authentication manager builder
-     * @throws Exception
-     */
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth)
-//            throws Exception {
-//
-//        auth.inMemoryAuthentication()
-//                .passwordEncoder(new BCryptPasswordEncoder())
-//                .withUser("temporary").password("temporary").roles("ADMIN")
-//                .and()
-//                .withUser("user").password("userPass").roles("USER");
-//    }
 
     /**
      * configure how requests are secured by interceptors
@@ -63,7 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .authenticationEntryPoint(restAuthenticationEntryPoint)
             .and()
             .authorizeRequests()
-                .antMatchers("/register", "/loginprocess").permitAll()
+                .antMatchers("/register", "/all").permitAll()
                 .antMatchers("/user/**", "/meter/**").hasAuthority("USER")
                 .anyRequest().fullyAuthenticated()
                 .and()
@@ -75,15 +57,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
             .logout().and()
             .httpBasic();
-    }
-
-    /**
-     * Get the password encoder
-     * @return BCryptPasswordEncoder
-     */
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
     /**

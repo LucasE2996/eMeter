@@ -1,5 +1,6 @@
 package emonitor.app.restapi;
 
+import emonitor.app.domain.Client;
 import emonitor.app.services.RestError;
 import emonitor.app.services.ClientService;
 import emonitor.app.wrapper.UserWrapper;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -26,6 +28,19 @@ public class ClientController {
         this.clientService = clientService;
         this.passwordEncoder = passwordEncoder;
     }
+
+    @GetMapping(value = "all", produces = "application/json")
+    public ResponseEntity<?> getAllUsers(
+            UriComponentsBuilder ucb) {
+        final URI location = ucb
+                .path("all").build().toUri();
+        final HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setLocation(location);
+        responseHeaders.setAccessControlAllowOrigin("*");
+        final List<Client> users = clientService.getAll();
+        return new ResponseEntity<>(users, responseHeaders, HttpStatus.OK);
+    }
+
     @GetMapping(value = "user/detail", produces = "application/json")
     public ResponseEntity<?> getUser(
             Authentication auth,

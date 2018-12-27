@@ -16,7 +16,7 @@ public class ThingSpeakService {
 
     private final RestTemplate restTemplate;
     private final SimpleDateFormat dateFormat;
-    private final String apiUrl = "https://api.thingspeak.com/channels/456741/feeds.json?api_key=K7Q13A7CLNUZTMPX&results=1";
+    private final String API_URL = "https://api.thingspeak.com/channels/456741/feeds.json?api_key=K7Q13A7CLNUZTMPX&results=1";
 
     public ThingSpeakService(RestTemplate restTemplate, SimpleDateFormat dateFormat) {
         this.restTemplate = restTemplate;
@@ -40,7 +40,7 @@ public class ThingSpeakService {
      * @return {@link Meter} The meter converted.
      */
     public Meter getMeterConverted() {
-        final ThingSpeakAdapter ts = this.restTemplate.getForObject(this.apiUrl, ThingSpeakAdapter.class);
+        final ThingSpeakAdapter ts = this.restTemplate.getForObject(this.API_URL, ThingSpeakAdapter.class);
         return new Meter(
                 ts.getName(),
                 ts.getId(),
@@ -54,12 +54,12 @@ public class ThingSpeakService {
     }
 
     public Optional<Double> getMeterCurrent() {
-        final ThingSpeakAdapter currentPayload = this.restTemplate.getForObject(this.apiUrl, ThingSpeakAdapter.class);
+        final ThingSpeakAdapter currentPayload = this.restTemplate.getForObject(this.API_URL, ThingSpeakAdapter.class);
         return Optional.of(Double.parseDouble(currentPayload.getField1()));
     }
 
     public Optional<Double> getMeterVoltage() {
-        final ThingSpeakAdapter voltagePayload = this.restTemplate.getForObject(this.apiUrl, ThingSpeakAdapter.class);
+        final ThingSpeakAdapter voltagePayload = this.restTemplate.getForObject(this.API_URL, ThingSpeakAdapter.class);
         return Optional.of(Double.parseDouble(voltagePayload.getField2()));
     }
 
