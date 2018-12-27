@@ -3,6 +3,7 @@ package emonitor.app.domain;
 import lombok.Getter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.*;
 
@@ -12,8 +13,11 @@ public class Report implements Serializable {
     @Getter private double dayAverage;
     @Getter private double weekAverage;
     @Getter private double monthAverage;
+    @Lob
     @Getter private ArrayList<Watt> dayData;
+    @Lob
     @Getter private ArrayList<Watt> weekData;
+    @Lob
     @Getter private ArrayList<Watt> monthData;
 
     public Report(double dayAverage, double weekAverage, double monthAverage) {
@@ -35,10 +39,6 @@ public class Report implements Serializable {
         this.calculateWeekAverage();
         this.calculateMonthAverage();
     }
-
-//    public double getWattsPerHour(double watts) {
-//        return (watts * ) /
-//    }
 
     private void calculateDayAverage() {
         this.dayAverage = this.sumTotal(this.dayData) / this.dayData.size();
