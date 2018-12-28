@@ -26,6 +26,11 @@ public class ClientService implements UserDetailsService {
                 .orElseThrow(NoSuchElementException::new);
     }
 
+    public Client getUser(String userName) {
+        return repository.findByUsername(userName)
+                .orElseThrow(NoSuchElementException::new);
+    }
+
     public void save(Client client) {
         repository.save(client);
     }

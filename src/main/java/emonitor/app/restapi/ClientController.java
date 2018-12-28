@@ -42,18 +42,17 @@ public class ClientController {
         return new ResponseEntity<>(users, responseHeaders, HttpStatus.OK);
     }
 
-    @GetMapping(value = "{userId}/detail", produces = "application/json")
+    @GetMapping(value = "/detail", produces = "application/json")
     public ResponseEntity<?> getUser(
-            @PathVariable int userId,
+            @RequestParam String userName,
             UriComponentsBuilder ucb) {
         final URI location = ucb
                 .path("/user/")
-                .path(String.valueOf(userId))
                 .path("/detail").build().toUri();
         final HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(location);
         try {
-            UserWrapper userWrapper = new UserWrapper(clientService.getUser(userId));
+            UserWrapper userWrapper = new UserWrapper(clientService.getUser(userName));
             return new ResponseEntity<>(userWrapper, responseHeaders, HttpStatus.OK);
         } catch (UsernameNotFoundException e) {
             e.printStackTrace();
