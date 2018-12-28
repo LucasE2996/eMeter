@@ -47,7 +47,6 @@ public class MonitorController {
     public ResponseEntity<?> createMonitor(
             @PathVariable int clientId,
             @RequestBody String nominalValue,
-            Authentication auth,
             UriComponentsBuilder ucb
             ) {
         URI location = ucb
@@ -57,21 +56,15 @@ public class MonitorController {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(location);
         try {
-            final UserWrapper userWrapper1 = (UserWrapper) auth.getPrincipal();
             final UserWrapper userWrapper = new UserWrapper(clientService.getUser(clientId));
-            if (userWrapper.getUsername().equals(userWrapper1.getUsername())) {
-                final Client user = userWrapper.getClient();
-                final Monitor monitor = tsService.getMeterConverted();
-                JsonObject jobj = new Gson().fromJson(nominalValue, JsonObject.class);
-                monitor.setNominalPower(jobj.get("nominalValue").getAsDouble());
-                monitor.setClient(user);
-                service.save(monitor);
-                clientService.save(user);
-                return new ResponseEntity<>(new MeterWrapper(monitor), responseHeaders, HttpStatus.CREATED);
-            } else {
-                RestError error = new RestError(403, "You have no access to this page");
-                return new ResponseEntity<>(error, responseHeaders, HttpStatus.FORBIDDEN);
-            }
+            final Client user = userWrapper.getClient();
+            final Monitor monitor = tsService.getMeterConverted();
+            JsonObject jobj = new Gson().fromJson(nominalValue, JsonObject.class);
+            monitor.setNominalPower(jobj.get("nominalValue").getAsDouble());
+            monitor.setClient(user);
+            service.save(monitor);
+            clientService.save(user);
+            return new ResponseEntity<>(new MeterWrapper(monitor), responseHeaders, HttpStatus.CREATED);
         } catch (NoSuchElementException e) {
             e.printStackTrace();
             RestError error = new RestError(404, "User id: " + clientId + " could not be found");
@@ -86,7 +79,6 @@ public class MonitorController {
     @GetMapping(value = "/{clientId}/monitors",
             produces = "application/json")
     public ResponseEntity<?> getAllMonitors(
-            Authentication auth,
             @PathVariable int clientId,
             UriComponentsBuilder ucb) {
         URI location = ucb
@@ -95,22 +87,15 @@ public class MonitorController {
                 .path("/monitors").build().toUri();
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(location);
-        final UserWrapper userWrapper1 = (UserWrapper) auth.getPrincipal();
-        final UserWrapper userWrapper = new UserWrapper(clientService.getUser(clientId));
-        if (userWrapper.getUsername().equals(userWrapper1.getUsername())) {
-            final List<Monitor> monitors = service.getAll(clientId);
-            final List<MeterWrapper> wrappers = new ArrayList<>();
-            monitors.forEach(meter -> wrappers.add(new MeterWrapper(meter)));
-            return new ResponseEntity<>(wrappers, responseHeaders, HttpStatus.OK);
-        }
-        RestError error = new RestError(403, "You have no access to this page");
-        return new ResponseEntity<>(error, responseHeaders, HttpStatus.FORBIDDEN);
+        final List<Monitor> monitors = service.getAll(clientId);
+        final List<MeterWrapper> wrappers = new ArrayList<>();
+        monitors.forEach(meter -> wrappers.add(new MeterWrapper(meter)));
+        return new ResponseEntity<>(wrappers, responseHeaders, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{userId}/monitors/{id}/detail",
             produces = "application/json")
     public ResponseEntity<?> getMeter(
-            Authentication auth,
             @PathVariable int id,
             @PathVariable int userId,
             UriComponentsBuilder ucb) {
@@ -123,23 +108,16 @@ public class MonitorController {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(location);
         try {
-            final UserWrapper userWrapper1 = (UserWrapper) auth.getPrincipal();
-                final UserWrapper userWrapper = new UserWrapper(clientService.getUser(userId));
-                if (userWrapper.getUsername().equals(userWrapper1.getUsername())) {
-                    Monitor monitor = service.get(id);
-                    // Restriction: the tsService is static, to add new monitor you have to modify this Class
-                    // and add a new url
-                    monitor.updateValues(
-                            tsService.getMeterVoltage().isPresent() ? tsService.getMeterVoltage().get() : 0,
-                            tsService.getMeterCurrent().isPresent() ? tsService.getMeterCurrent().get() : 0,
-                            tsService.getMeterPower()
-                    );
-                    service.save(monitor);
-                    return new ResponseEntity<>(new MeterWrapper(monitor), responseHeaders, HttpStatus.OK);
-                } else {
-                    RestError error = new RestError(403, "You have no access to this page");
-                    return new ResponseEntity<>(error, responseHeaders, HttpStatus.FORBIDDEN);
-            }
+            Monitor monitor = service.get(id);
+            // Restriction: the tsService is static, to add new monitor you have to modify this Class
+            // and add a new url
+            monitor.updateValues(
+                    tsService.getMeterVoltage().isPresent() ? tsService.getMeterVoltage().get() : 0,
+                    tsService.getMeterCurrent().isPresent() ? tsService.getMeterCurrent().get() : 0,
+                    tsService.getMeterPower()
+            );
+            service.save(monitor);
+            return new ResponseEntity<>(new MeterWrapper(monitor), responseHeaders, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             e.printStackTrace();
             RestError error = new RestError(4, "Monitor id: " + id + " could not be found");

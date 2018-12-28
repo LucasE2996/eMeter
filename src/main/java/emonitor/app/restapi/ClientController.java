@@ -42,26 +42,22 @@ public class ClientController {
         return new ResponseEntity<>(users, responseHeaders, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/detail", produces = "application/json")
+    @GetMapping(value = "{userId}/detail", produces = "application/json")
     public ResponseEntity<?> getUser(
-            Authentication auth,
+            @PathVariable int userId,
             UriComponentsBuilder ucb) {
         final URI location = ucb
-                .path("/user")
+                .path("/user/")
+                .path(String.valueOf(userId))
                 .path("/detail").build().toUri();
         final HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(location);
-        final UserWrapper userWrapper = (UserWrapper) auth.getPrincipal();
         try {
-            final UserDetails userDetails = clientService.loadUserByUsername(userWrapper.getUsername());
-            if (userDetails.getUsername().equals(userWrapper.getUsername()) &&
-                userDetails.getPassword().equals(userWrapper.getPassword()))
-                return new ResponseEntity<>(userDetails, responseHeaders, HttpStatus.OK);
-            RestError error = new RestError(403, "You have no access to this page");
-            return new ResponseEntity<>(error, responseHeaders, HttpStatus.FORBIDDEN);
+            UserWrapper userWrapper = new UserWrapper(clientService.getUser(userId));
+            return new ResponseEntity<>(userWrapper, responseHeaders, HttpStatus.OK);
         } catch (UsernameNotFoundException e) {
             e.printStackTrace();
-            RestError error = new RestError(401, "The client with name '" + userWrapper.getUsername() + "' could not be found");
+            RestError error = new RestError(401, "This user could not be found");
             return new ResponseEntity<>(error, responseHeaders, HttpStatus.NOT_FOUND);
         }
     }
