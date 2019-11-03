@@ -1,4 +1,10 @@
-# eMonitor
+<h1 align="center">eMeter - Backend ☕️</h1>
+<p>
+  <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
+  <a href="https://twitter.com/lucashtwt" target="_blank">
+    <img alt="Twitter: lucashtwt" src="https://img.shields.io/twitter/follow/lucashtwt.svg?style=social" />
+  </a>
+</p>
 
 O que fazer?
 -----------------
@@ -13,30 +19,17 @@ Para que fazer?
 -----------------
 Gerenciar o controle de gastos evitando o desperdício através da conferência da classificação do consumo de energia do eletrodoméstico;
 
-Tecnologias usadas:
------------------
-Frontend:
-- Ionic 3
+## Author
 
-Backend:
-- Spring boot
-- PostgreSQL
+👤 **Lucas Rosa**
 
-Server:
-- Heroku
-- ThingSpeak
+* Website: https://codepen.io/Lucas-Rosa/
+* Twitter: [@lucashtwt](https://twitter.com/lucashtwt)
+* Github: [@LucasE2996](https://github.com/LucasE2996)
 
-Hardware:
-- ESP8266
+## Show your support
 
-## How to use:
+Give a ⭐️ if this project helped you!
 
-Clone the code from Github
-Set up PostgreDQL database on your machine with
-user: postgres
-pass: 78951
-
----------------------------------------
-TCC College Project - All rights reserved
-
-
+***
+_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
